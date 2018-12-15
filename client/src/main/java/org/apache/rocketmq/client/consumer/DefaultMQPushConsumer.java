@@ -83,6 +83,15 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
      *
      * This field defaults to clustering.
      */
+    /**
+     * 消息模型定义了如何将消息传递给每个客户端
+     * RocketMQ支持两种消息模型:集群和广播。如果设置了集群，则使用客户端
+     * 相同的{@link #consumerGroup}只会消耗订阅消息的碎片，从而达到负载
+     * 平衡;相反，如果设置了广播，每个使用者客户机将使用所有订阅的消息
+     * 分开。
+     *
+     * 此字段默认为集群
+     */
     private MessageModel messageModel = MessageModel.CLUSTERING;
 
     /**
@@ -116,6 +125,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
      * </li>
      * </ul>
      */
+    //消费者引导上的消费点
     private ConsumeFromWhere consumeFromWhere = ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET;
 
     /**
@@ -124,21 +134,30 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
      * Implying Seventeen twelve and 01 seconds on December 23, 2013 year<br>
      * Default backtracking consumption time Half an hour ago.
      */
+    /**
+     * 二次精度回溯消耗时间。时间格式是
+     * 20131223171201
+     * 表示2013年12月23日的1712秒和01秒
+     * 默认回溯消费时间半小时前。
+     */
     private String consumeTimestamp = UtilAll.timeMillisToHumanString3(System.currentTimeMillis() - (1000 * 60 * 30));
 
     /**
      * Queue allocation algorithm specifying how message queues are allocated to each consumer clients.
      */
+    //消息队列分配给每个使用者客户机的队列分配算法。
     private AllocateMessageQueueStrategy allocateMessageQueueStrategy;
 
     /**
      * Subscription relationship
      */
+    //订阅关系
     private Map<String /* topic */, String /* sub expression */> subscription = new HashMap<String, String>();
 
     /**
      * Message listener
      */
+    //消息监听器
     private MessageListener messageListener;
 
     /**
@@ -149,11 +168,13 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
     /**
      * Minimum consumer thread number
      */
+    //最小消费线程数
     private int consumeThreadMin = 20;
 
     /**
      * Max consumer thread number
      */
+    //最大消费线程数
     private int consumeThreadMax = 64;
 
     /**
@@ -164,6 +185,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
     /**
      * Concurrently max span offset.it has no effect on sequential consumption
      */
+    //同时最大跨距偏移量。对顺序消费没有影响
     private int consumeConcurrentlyMaxSpan = 2000;
 
     /**
